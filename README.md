@@ -6,7 +6,7 @@ A progressively enhanced, lightweight, customizable, and accessible `<select>` c
 
 ### Lightweight
 
-A single file, weighing only 7KB (2.6KB gzip), and having no dependencies.
+A single file, weighing only ![minified size](https://badgen.net/bundlephobia/min/better-select) ![gzipped size](https://badgen.net/bundlephobia/minzip/react), and having no dependencies.
 
 ### Accessible
 
