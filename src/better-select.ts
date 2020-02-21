@@ -20,8 +20,6 @@ const enum Key {
   shift = 16,
 }
 
-const doc = document;
-
 export class BetterSelect extends HTMLElement {
   private select: HTMLSelectElement;
   private input: HTMLInputElement;
@@ -33,19 +31,19 @@ export class BetterSelect extends HTMLElement {
     super();
     this.attachShadow({ mode: "open" });
     this.activeOptionId = "";
+  }
 
+  connectedCallback() {
     if (this.getAttribute("match")) {
       // @ts-ignore
       const matcher = window[this.getAttribute("match")!];
       if (typeof matcher === "function" && matcher.length == 2) {
         this.isMatch = matcher;
       } else {
-        console.error(new Error("`match` must be a global function."));
+        throw new Error("Invalid `match` attribute");
       }
     }
-  }
 
-  connectedCallback() {
     this.select = this.querySelector("select")!;
     const sr = this.shadowRoot!;
     sr.innerHTML = markup(this.select);
@@ -55,7 +53,7 @@ export class BetterSelect extends HTMLElement {
     this.status = sr.querySelector('[role="status"]')! as HTMLElement;
     this.menu = sr.querySelector("ul")!;
 
-    doc.addEventListener("click", this.onDocumentClick);
+    document.addEventListener("click", this.onDocumentClick);
     this.input.addEventListener("click", this.onInputClick);
     this.input.addEventListener("keydown", this.onInputKeyDown);
     this.input.addEventListener("keyup", this.onInputKeyUp);
@@ -67,7 +65,7 @@ export class BetterSelect extends HTMLElement {
   }
 
   disconnectedCallback() {
-    doc.removeEventListener("click", this.onDocumentClick);
+    document.removeEventListener("click", this.onDocumentClick);
     this.input.removeEventListener("click", this.onInputClick);
     this.input.removeEventListener("keydown", this.onInputKeyDown);
     this.input.removeEventListener("keyup", this.onInputKeyUp);
@@ -75,7 +73,7 @@ export class BetterSelect extends HTMLElement {
     this.menu.removeEventListener("click", this.onOptionClick);
     this.menu.removeEventListener("keydown", this.onMenuKeyDown);
     const arrow = this.shadowRoot!.querySelector("svg")!;
-    arrow.querySelector("svg")!.removeEventListener("click", this.onArrowClick);
+    arrow.removeEventListener("click", this.onArrowClick);
   }
 
   /**
@@ -160,7 +158,7 @@ export class BetterSelect extends HTMLElement {
 
   private onArrowClick = (ev: MouseEvent) => {
     this.onInputClick(ev);
-    this.input.focus();
+    this.focusTextBox();
   };
 
   private onMenuKeyDown = (ev: KeyboardEvent) => {
@@ -177,10 +175,9 @@ export class BetterSelect extends HTMLElement {
         return this.onOptionEscape(ev);
       case Key.tab:
         this.hideMenu();
-        this.removeTextBoxFocus();
-        return;
+        return this.removeTextBoxFocus();
       default:
-        this.input.focus();
+        this.focusTextBox();
     }
   };
 
@@ -221,14 +218,14 @@ export class BetterSelect extends HTMLElement {
 
   private onOptionClick = (ev: MouseEvent) => {
     const el = ev.target;
-    if (el instanceof HTMLLIElement && el.matches('[role="option"]')) {
+    if (el instanceof HTMLLIElement) {
       this.selectOption(el);
     }
   };
 
   private onTextBoxDownPressed = (ev: KeyboardEvent) => {
-    const value = this.input.value.trim();
-    const showAll = !value.length || !!this.getMatchingOption(value);
+    const value = this.input.value;
+    const showAll = !value || !!this.getMatchingOption(value);
     const options = showAll ? this.getAllOptions() : this.getMatches(value);
     if (!options.length) return;
 
@@ -263,14 +260,14 @@ export class BetterSelect extends HTMLElement {
     this.input.classList.remove("focus");
   }
 
-  private updateSelectBox() {
-    const value = this.input.value.trim();
-    const option = this.getMatchingOption(value);
-    this.select.value = option ? option.value : "";
-  }
-
   private focusTextBox() {
     this.input.focus();
+  }
+
+  private updateSelectBox() {
+    const value = this.input.value;
+    const option = this.getMatchingOption(value);
+    this.select.value = option ? option.value : "";
   }
 
   private selectActiveOption() {
@@ -317,12 +314,12 @@ export class BetterSelect extends HTMLElement {
   }
 
   private showMenu() {
-    this.menu.classList.remove("hidden");
+    this.menu.classList.remove("hide");
     this.input.setAttribute("aria-expanded", "true");
   }
 
   private hideMenu() {
-    this.menu.classList.add("hidden");
+    this.menu.classList.add("hide");
     this.input.setAttribute("aria-expanded", "false");
     this.activeOptionId = "";
     this.clearOptions();
@@ -336,7 +333,7 @@ export class BetterSelect extends HTMLElement {
 
   private getAllOptions() {
     return Array.from(this.select.options)
-      .filter(option => option.value.trim().length)
+      .filter(option => option.value)
       .map(({ text, value }) => ({ text, value }));
   }
 
@@ -351,27 +348,25 @@ export class BetterSelect extends HTMLElement {
     this.clearOptions();
     this.activeOptionId = "";
 
-    const frag = document
-      .createDocumentFragment()
-      .appendChild(doc.createElement("div"));
+    const frag = document.createElement("div");
     if (options.length) {
-      for (let i = 0; i < options.length; i++) {
-        frag.insertAdjacentHTML("beforeend", this.getOptionHtml(i, options[i]));
-      }
+      frag.innerHTML = Object.entries(options)
+        .map(([i, option]) => this.getOptionHtml(i, option))
+        .join("");
     } else {
-      frag.insertAdjacentHTML("beforeend", this.getNoResultsOptionHtml());
+      frag.innerHTML = this.getNoResultsOptionHtml();
     }
     this.menu.append(...Array.from(frag.children));
-    this.menu.scrollTop = this.menu.scrollTop;
+    this.menu.scrollTop = 0;
   }
 
   private getNoResultsOptionHtml() {
     return html`
-      <li class="no-result">No results</li>
+      <li class="empty">No results</li>
     `;
   }
 
-  private getOptionHtml(i: number, option: Option) {
+  private getOptionHtml(i: number | string, option: Option) {
     return html`
       <li
         tabindex="-1"
@@ -391,33 +386,34 @@ export class BetterSelect extends HTMLElement {
   }
 
   private hideSelectBox() {
-    this.select.setAttribute("aria-hidden", "true");
-    this.select.setAttribute("tabindex", "-1");
-    this.select.classList.add("visually-hidden");
-    this.select.id = "";
+    const select = this.select;
+    select.setAttribute("aria-hidden", "true");
+    select.classList.add("vhide");
+    select.tabIndex = -1;
+    select.id = "";
   }
 
   private setValue(value: string) {
-    this.select.value = value;
-    this.input.value = value.trim().length
-      ? this.select.options[this.select.selectedIndex].text
-      : "";
-    const ev = doc.createEvent("HTMLEvents");
+    const { select, input } = this;
+    select.value = value;
+    input.value = select.options[select.selectedIndex].text || "";
+
+    const ev = document.createEvent("HTMLEvents");
     ev.initEvent("change", true, true);
-    this.select.dispatchEvent(ev);
+    select.dispatchEvent(ev);
   }
 }
 
 function markup(select: HTMLSelectElement) {
   const { id, selectedIndex, options } = select;
   const selected = options[selectedIndex];
-  const value = selected && selected.value.trim() ? selected.text : null;
+  const value = selected && selected.value != "" ? selected.text : null;
   const listId = `list-${id}`;
   const label =
-    doc.querySelector(`label[for="${id}"]`) || select.closest("label");
+    document.querySelector(`label[for="${id}"]`) || select.closest("label");
 
   return html`
-    <div class="autocomplete">
+    <div>
       <style>
         ${styles}
       </style>
@@ -436,13 +432,13 @@ function markup(select: HTMLSelectElement) {
       <svg focusable="false" viewBox="0 0 25 25" aria-hidden="true">
         <g><polygon points="0 0 22 0 11 17"></polygon></g>
       </svg>
-      <ul role="listbox" class="hidden" id="${listId}"></ul>
-      <div aria-live="polite" role="status" class="visually-hidden"></div>
+      <ul role="listbox" class="hide" id="${listId}"></ul>
+      <div aria-live="polite" role="status" class="vhide"></div>
     </div>
   `;
 }
 
 const name = "better-select";
-if (doc.querySelector(name) && !customElements.get(name)) {
+if (document.querySelector(name) && !customElements.get(name)) {
   customElements.define(name, BetterSelect);
 }

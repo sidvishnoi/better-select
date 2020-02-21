@@ -6,20 +6,27 @@ export default css`
     --input-background: #fff;
     --input-border-width: 2px;
     --input-border-color: #718096;
-    --focus-outline-width: 3px;
-    --focus-outline-color: #ecc94b;
+    --outline-width: 3px;
+    --outline-color: #ecc94b;
+    --menu-background: var(--input-background);
     --menu-max-height: 16em;
     --item-color: #000;
     --item-background: #fff;
-    --item-color-active: #fff;
-    --item-background-active: #111;
+    --item-active-color: #fff;
+    --item-active-background: #111;
     --caret-color: var(--input-color);
     --item-padding: 0.5em;
     display: inline-block;
   }
 
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
   ::slotted(*),
-  .visually-hidden {
+  .vhide {
     border: 0;
     clip: rect(0 0 0 0);
     height: 1px;
@@ -30,21 +37,19 @@ export default css`
     width: 1px;
   }
 
-  .hidden {
+  .hide {
     display: none;
   }
 
-  .autocomplete {
+  :host > * {
     position: relative;
     --input-border: var(--input-border-width) solid var(--input-border-color);
   }
 
-  input[type="text"] {
+  input {
     border-radius: 0;
-    box-sizing: border-box;
     width: 100%;
-    font-size: inherit;
-    font-family: inherit;
+    font: inherit;
     line-height: inherit;
     color: var(--input-color);
     background: var(--input-background);
@@ -52,58 +57,48 @@ export default css`
     border: var(--input-border);
   }
 
-  input[type="text"].focus {
-    outline-offset: 0;
-    outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  input.focus {
+    outline: var(--outline-width) solid var(--outline-color);
   }
 
   svg {
     position: absolute;
     width: 1.5em;
-    height: 1.5em;
     right: 0;
-    top: 0;
     fill: var(--caret-color);
     transform: translate(-50%, 50%);
     cursor: default;
   }
 
-  [role="listbox"] {
-    margin: 0;
-    padding: 0;
+  ul {
     max-height: var(--menu-max-height);
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
     position: absolute;
     top: 100%;
     width: 100%;
-    background-color: #f7fafc;
-    border-radius: 0;
-    box-sizing: border-box;
     z-index: 2;
+    background-color: var(--menu-background);
     border: var(--input-border);
   }
 
-  [role="option"],
-  .no-result {
+  li {
     padding: var(--item-padding);
     display: block;
     outline: none;
-    margin: 0;
     color: var(--item-color);
     background-color: var(--item-background);
     border-bottom: var(--input-border);
     border-width: 1px;
   }
 
-  [role="option"]:hover,
-  [role="option"][aria-selected="true"] {
-    color: var(--item-color-active);
-    background-color: var(--item-background-active);
+  li:hover,
+  li[aria-selected="true"] {
+    color: var(--item-active-color);
+    background-color: var(--item-active-background);
     cursor: default;
   }
 
-  .no-result {
+  .empty {
     cursor: not-allowed;
   }
 `;
