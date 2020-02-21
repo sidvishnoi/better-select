@@ -1,6 +1,6 @@
 {
   "name": "better-select",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A progressively enhanced, lightweight, customizable, and accessible <select> custom element with text input",
   "main": "better-select.js",
   "type": "module",
