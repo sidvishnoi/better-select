@@ -56,10 +56,11 @@ better-select {
   --input-border-width: 2px;
   --input-border-color: #718096;
   /* focused/active input box */
-  --focus-outline-width: 3px;
-  --focus-outline-color: #ecc94b;
+  --outline-width: 3px;
+  --outline-color: #ecc94b;
   /* options list wrapper */
   --menu-max-height: 16em;
+  --menu-background: var(--input-background);
   /* options */
   --item-padding: 0.5em;
   --item-color: #000;
