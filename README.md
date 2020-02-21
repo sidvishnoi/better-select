@@ -49,24 +49,26 @@ You can import better-select.js from CDNs like [unpkg](https://unpkg.com/better-
 The custom element can be styled using CSS custom properties. Following properties are presently available with along their default values:
 
 ```css
-/* input box */
---input-color: #000;
---input-background: #fff;
---input-border-width: 2px;
---input-border-color: #718096;
-/* focused/active input box */
---focus-outline-width: 3px;
---focus-outline-color: #ecc94b;
-/* options list wrapper */
---menu-max-height: 16em;
-/* options */
---item-padding: 0.5em;
---item-color: #000;
---item-background: #fff;
---item-color-active: #fff;
---item-background-active: #111;
-/* dropdown arrow */
---caret-color: var(--input-color);
+better-select {
+  /* input box */
+  --input-color: #000;
+  --input-background: #fff;
+  --input-border-width: 2px;
+  --input-border-color: #718096;
+  /* focused/active input box */
+  --focus-outline-width: 3px;
+  --focus-outline-color: #ecc94b;
+  /* options list wrapper */
+  --menu-max-height: 16em;
+  /* options */
+  --item-padding: 0.5em;
+  --item-color: #000;
+  --item-background: #fff;
+  --item-color-active: #fff;
+  --item-background-active: #111;
+  /* dropdown arrow */
+  --caret-color: var(--input-color);
+}
 ```
 
 ### Custom filter function
