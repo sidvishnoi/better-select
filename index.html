@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width">
+    <title>better-select | progressively enhanced select auto-complete</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Inconsolata"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-size: 16px;
+        font-family: Inconsolata, Fira Mono, Fira Code, monospace;
+        background: snow;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      header,
+      footer {
+        padding: 2em;
+      }
+
+      header h1 {
+        margin-bottom: 1em;
+        font-size: 2.5em;
+        border-bottom: 2px dashed;
+      }
+
+      form {
+        max-width: 30em;
+        margin: 1em auto;
+        padding: 2em;
+        background: #fff;
+        border: 0.5em solid;
+      }
+
+      form > h2 {
+        border-bottom: 2px dashed;
+        font-size: 1.8em;
+        padding: 0.2em 0;
+        margin-bottom: 1em;
+      }
+
+      form > div {
+        display: flex;
+        align-items: center;
+        margin-top: 1em;
+        justify-content: space-between;
+      }
+
+      better-select select,
+      input,
+      label,
+      button {
+        width: 100%;
+        font: inherit;
+        padding: 0.5em;
+        background: transparent;
+      }
+
+      better-select select,
+      input {
+        border: 2px solid #718096;
+      }
+
+      label {
+        padding: 0;
+        font-weight: bold;
+        max-width: 15ch;
+        font-size: large;
+      }
+
+      input {
+        max-width: 5ch;
+      }
+
+      footer,
+      button {
+        margin-top: 1em;
+        padding: 1em;
+        font-size: large;
+        border: none;
+        background: #000;
+        color: gold;
+      }
+
+      footer {
+        margin-top: auto;
+        border-bottom: 0.2em solid gold;
+        text-align: right;
+      }
+
+      footer a {
+        color: gold;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>better-select</h1>
+      <h2>
+        A progressively enhanced, lightweight, customizable, and accessible
+        <code>&lt;select&gt;</code> custom element with an auto-complete using
+        text input.
+      </h2>
+    </header>
+    <form action="">
+      <h2>Buy your favorite fruits</h2>
+      <div>
+        <label for="fruit">Favorite fruit</label>
+        <better-select>
+          <select id="fruit" name="fruit" required>
+            <option value="">Select</option>
+            <option value="apple">Apple</option>
+            <option value="banana">Banana</option>
+            <option value="orange">Orange</option>
+            <option value="strawberry">Strawberries</option>
+          </select>
+        </better-select>
+      </div>
+      <div>
+        <label for="amount">Quantity</label>
+        <input
+          type="text"
+          id="amount"
+          name="amount"
+          pattern="\d+"
+          inputmode="numeric"
+        />
+      </div>
+      <button>Submit</button>
+    </form>
+    <footer>
+      Made by <a href="https://sidvishnoi.github.io/">Sid Vishnoi</a>. Source
+      and documentation at
+      <a href="http://github.com/sidvishnoi/better-select">GitHub</a>.
+    </footer>
+    <script
+      src="https://unpkg.com/better-select/better-select.js"
+      type="module"
+    ></script>
+  </body>
+</html>

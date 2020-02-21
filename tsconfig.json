@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "module": "ESNext",
+    "target": "ESNext",
+    "allowJs": false,
+    "sourceMap": false,
+    "lib": [
+      "ESNext",
+      "dom"
+    ],
+    "rootDir": ".",
+    "moduleResolution": "Node"
+  }
+}

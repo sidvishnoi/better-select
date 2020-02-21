@@ -1,0 +1,38 @@
+{
+  "name": "better-select",
+  "version": "1.0.0",
+  "description": "A progressively enhanced, lightweight, customizable, and accessible <select> custom element with text input",
+  "main": "better-select.js",
+  "type": "module",
+  "scripts": {
+    "start": "rollup -cw",
+    "build": "NODE_ENV=production rollup -c",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sidvishnoi/better-select.git"
+  },
+  "keywords": [
+    "autocomplete",
+    "better-select",
+    "combobox",
+    "datalist",
+    "editcombobox",
+    "select"
+  ],
+  "author": "Sid Vishnoi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sidvishnoi/better-select/issues"
+  },
+  "homepage": "https://github.com/sidvishnoi/better-select#readme",
+  "devDependencies": {
+    "@ampproject/rollup-plugin-closure-compiler": "^0.22.2",
+    "@rollup/plugin-typescript": "^3.0.0",
+    "rollup": "^1.31.1",
+    "rollup-plugin-minify-html-literals": "^1.2.3",
+    "tslib": "^1.11.0",
+    "typescript": "^3.8.2"
+  }
+}
