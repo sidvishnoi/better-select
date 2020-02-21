@@ -46,7 +46,7 @@ You can import better-select.js from CDNs like [unpkg](https://unpkg.com/better-
 
 ### Styling?
 
-The custom element can be styled using CSS custom properties. Following properties are presently available with along their default values:
+The custom element can be styled using CSS custom properties. Following properties are presently available along with their default values:
 
 ```css
 better-select {
@@ -78,7 +78,7 @@ better-select {
 ```js
 import BetterSelect from "./better-select.js";
 
-class EventBetterSelect extends BetterSelect {
+class MyBetterSelect extends BetterSelect {
   constructor() {
     super();
   }
@@ -93,7 +93,7 @@ class EventBetterSelect extends BetterSelect {
   }
 }
 
-customElements.define("my-better-select", BetterSelect);
+customElements.define("my-better-select", MyBetterSelect);
 ```
 
 **Method 2:** Add a globally available function name as an attribute to the element
